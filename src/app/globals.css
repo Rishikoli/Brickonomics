@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0a;
+  --card-background: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --accent-purple: #9333ea;
+  --accent-purple-dark: #7e22ce;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+.card {
+  @apply bg-gray-800 rounded-xl shadow-lg border border-gray-700 transition-all duration-300;
+}
+
+.card:hover {
+  @apply shadow-xl border-purple-700;
+  transform: translateY(-2px);
+}
+
+.input-field {
+  @apply bg-gray-800 border border-gray-700 text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent;
+}
+
+.btn-primary {
+  @apply bg-purple-700 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors;
+}
