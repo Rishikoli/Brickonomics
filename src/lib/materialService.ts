@@ -1,6 +1,7 @@
 'use client';
 
 import { openDB } from 'idb';
+import { DB_NAME, MATERIALS_STORE } from './dbInit';
 
 export interface Material {
   id?: number;
@@ -12,14 +13,11 @@ export interface Material {
   lastUpdated?: Date;
 }
 
-const DB_NAME = 'brickonomics';
-const STORE_NAME = 'materials';
-
-async function getDb() {
+const getDb = async () => {
   return openDB(DB_NAME, 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains(MATERIALS_STORE)) {
+        const store = db.createObjectStore(MATERIALS_STORE, { keyPath: 'id', autoIncrement: true });
         store.createIndex('category', 'category');
         
         // Add default materials
@@ -70,7 +68,7 @@ async function getDb() {
 export async function getMaterials(): Promise<Material[]> {
   try {
     const db = await getDb();
-    return db.getAll(STORE_NAME);
+    return db.getAll(MATERIALS_STORE);
   } catch (error) {
     console.error('Error getting materials:', error);
     throw new Error('Failed to get materials');
@@ -80,8 +78,8 @@ export async function getMaterials(): Promise<Material[]> {
 export async function getMaterialByCategory(category: string): Promise<Material | undefined> {
   try {
     const db = await getDb();
-    const tx = db.transaction(STORE_NAME, 'readonly');
-    const store = tx.objectStore(STORE_NAME);
+    const tx = db.transaction(MATERIALS_STORE, 'readonly');
+    const store = tx.objectStore(MATERIALS_STORE);
     const index = store.index('category');
     return index.get(category);
   } catch (error) {
@@ -97,7 +95,7 @@ export async function addMaterial(material: Omit<Material, 'id'>): Promise<Mater
       ...material,
       lastUpdated: new Date()
     };
-    const id = await db.add(STORE_NAME, materialWithDate);
+    const id = await db.add(MATERIALS_STORE, materialWithDate);
     return { ...materialWithDate, id: id as number };
   } catch (error) {
     console.error('Error adding material:', error);
@@ -108,7 +106,7 @@ export async function addMaterial(material: Omit<Material, 'id'>): Promise<Mater
 export async function updateMaterial(material: Material): Promise<void> {
   try {
     const db = await getDb();
-    await db.put(STORE_NAME, {
+    await db.put(MATERIALS_STORE, {
       ...material,
       lastUpdated: new Date()
     });
@@ -121,7 +119,7 @@ export async function updateMaterial(material: Material): Promise<void> {
 export async function deleteMaterial(id: number): Promise<void> {
   try {
     const db = await getDb();
-    await db.delete(STORE_NAME, id);
+    await db.delete(MATERIALS_STORE, id);
   } catch (error) {
     console.error('Error deleting material:', error);
     throw new Error('Failed to delete material');

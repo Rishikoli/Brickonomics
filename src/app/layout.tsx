@@ -2,16 +2,16 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
-import { DatabaseInitializer } from './components/DatabaseInitializer';
 import Navbar from './components/Navbar';
 import Loading from './loading';
 import OrbWrapper from './components/OrbWrapper';
+import DatabaseProvider from './components/DatabaseProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Brickonomics - Construction Cost Estimator',
-  description: 'Estimate and optimize construction costs in India',
+  title: 'Brickonomics',
+  description: 'Construction Cost Estimation Made Easy',
 };
 
 export default function RootLayout({
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen bg-gradient-to-br from-blue-950 via-purple-950 to-blue-950 text-gray-100`}>
-        <DatabaseInitializer />
+        <DatabaseProvider />
         <Suspense fallback={null}>
           <OrbWrapper />
         </Suspense>
